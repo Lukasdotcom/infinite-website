@@ -9,6 +9,9 @@ RUN cargo install --path . --profile release
 FROM debian:bullseye-slim
 
 COPY --from=builder /usr/local/cargo/bin/infinite-website /usr/local/bin/infinite-website
+RUN apt update 
+RUN apt install -y openssl libssl-dev
+RUN rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
 CMD ["infinite-website"]
