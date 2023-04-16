@@ -11,10 +11,10 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
         "js" => "application/javascript",
         "json" => "application/json",
         "css" => "text/css",
-        "ico" => "image/svg",
-        "png" => "image/svg",
-        "jpg" => "image/svg",
-        "svg" => "image/svg",
+        "ico" => "image/svg+xml",
+        "png" => "image/svg+xml",
+        "jpg" => "image/svg+xml",
+        "svg" => "image/svg+xml",
         "xml" => "application/xml",
         _ => "text/html",
     };
@@ -87,7 +87,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
 `/{}`",
                 path
             ),
-            "image/svg" => format!(
+            "image/svg+xml" => format!(
                 "Create a svg file with content that matches the following URL path:
 `/{}`",
                 path
