@@ -3,10 +3,9 @@ use reqwest::header;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 #[get("/{route:.*}")]
-async fn website(path: web::Path<String>) -> impl Responder {
+async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
     // Tries to determine the content type
-    let b = path.find("?").unwrap_or(path.len());
-    let reversed_path = &path[..b].chars().rev().collect::<String>();
+    let reversed_path = path.chars().rev().collect::<String>();
     let a = (path.len() as i32 - reversed_path.find(".").unwrap_or(0) as i32) as usize;
     let content_type = match &path[a..] {
         "js" => "application/javascript",
@@ -16,6 +15,11 @@ async fn website(path: web::Path<String>) -> impl Responder {
         "jpg" => "image/svg",
         "svg" => "image/svg",
         _ => "text/html",
+    };
+    let path = if req.query_string().is_empty() {
+        path.to_string()
+    } else {
+        path.to_string() + "?" + req.query_string()
     };
     println!("Creating document for {}", path);
     // Creates the chat
@@ -209,11 +213,17 @@ Add href links on the same site with related topics.",
         },
         None => 0,
     };
-    let end_bytes = match res.chars().rev().collect::<String>().find("```") {
+    let mut end_bytes = match res.chars().rev().collect::<String>().find("```") {
         Some(x) => res.len() - x - 3,
         None => res.len(),
     };
-    let res = &res[start_bytes..end_bytes];
+    if start_bytes  > end_bytes {
+        end_bytes = res.len();
+    }
+    let res = match start_bytes  > end_bytes {
+        true => &res,
+        false => &res[start_bytes..end_bytes],
+    };
     let res = if content_type == "text/html" {
         res.to_string()
             + "
