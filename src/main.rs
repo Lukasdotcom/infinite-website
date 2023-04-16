@@ -2,8 +2,10 @@ use actix_web::*;
 use reqwest::header;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use sqlx::{Connection, migrate::MigrateDatabase};
+use sqlx::{migrate::MigrateDatabase, Connection};
+#[routes]
 #[get("/{route:.*}")]
+#[post("/{route:.*}")]
 async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
     // Tries to determine the content type
     let reversed_path = path.chars().rev().collect::<String>();
@@ -15,6 +17,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
         "ico" => "image/jpeg",
         "png" => "image/jpeg",
         "jpg" => "image/jpeg",
+        "jpeg" => "image/jpeg",
         "gif" => "image/jpeg",
         "svg" => "image/svg+xml",
         "xml" => "application/xml",
@@ -59,7 +62,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
             pub path: String,
             pub content: String,
         }
-        let res = match sqlx::query_as::<_, Cache>("SELECT * FROM cache WHERE path = ?")
+        let res = match sqlx::query_as::<_, Cache>("SELECT * FROM cache WHERE path=?")
             .bind(&path)
             .fetch_one(&mut conn)
             .await
@@ -124,12 +127,12 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
                     chat_id: id,
                     content: match content_type {
                         "application/javascript" => format!(
-                    "Create a javascript file with content that matches the following URL path:
+                            "Create a vanilla javascript file that would solve the goal for the following url path:
 `/{}`",
-                    path
-                ),
+                            path
+                        ),
                         "text/css" => format!(
-                            "Create a css file with content that matches the following URL path:
+                            "Create a css file with modern styles that matches the following URL path:
 `/{}`",
                             path
                         ),
@@ -148,12 +151,12 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
 `/{}`",
                             path
                         ),
-                        _ => format!(
-                "Create a HTML response document with content that matches the following URL path:
+                        _ =>
+                        format!(
+                            "Create a HTML response document with content that matches the following URL path:
 `/{}`
-Add href links on the same site with related topics.",
-                path
-            ),
+Add href links on the same site with related topics and link css files with descriptive file names based on the HTML file's topic to improve the styling.",
+                            path)
                     },
                     parent_id: Value::Null,
                 });
@@ -213,7 +216,7 @@ Add href links on the same site with related topics.",
                 let client = reqwest::Client::new();
                 let res = client.post("https://open-assistant.io/api/chat/assistant_message")
                     .headers(headers)
-                    .body(format!("{{\"chat_id\":\"{}\",\"parent_id\":\"{}\",\"model_config_name\":\"OA_SFT_Llama_30B_6\",\"sampling_parameters\":{{\"top_k\":50,\"top_p\":0.95,\"typical_p\":null,\"temperature\":1,\"repetition_penalty\":1.2,\"max_new_tokens\":1024}}}}", chat_id, parent_id))
+                    .body(format!("{{\"chat_id\":\"{}\",\"parent_id\":\"{}\",\"model_config_name\":\"OA_SFT_Llama_30B_6\",\"sampling_parameters\":{{\"top_k\":50,\"top_p\":0.95,\"typical_p\":null,\"temperature\":0.9,\"repetition_penalty\":1.2,\"max_new_tokens\":1024}}}}", chat_id, parent_id))
                     .send()
                     .await
                     .unwrap()
@@ -323,7 +326,7 @@ pub async fn main() -> std::io::Result<()> {
         .unwrap();
     let _ = sqlx::query(
         "CREATE TABLE IF NOT EXISTS cache (
-            path TEXT PRIMARY KEY NOT NULL,
+            path TEXT NOT NULL,
             content TEXT NOT NULL
         )",
     )
