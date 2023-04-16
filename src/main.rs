@@ -15,6 +15,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
         "png" => "image/svg",
         "jpg" => "image/svg",
         "svg" => "image/svg",
+        "xml" => "application/xml",
         _ => "text/html",
     };
     let path = if req.query_string().is_empty() {
@@ -93,6 +94,11 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
             ),
             "application/json" => format!(
                 "Create a json file with content that matches the following URL path:
+`/{}`",
+                path
+            ),
+            "application/xml" => format!(
+                "Create a xml file with content that matches the following URL path:
 `/{}`",
                 path
             ),
