@@ -9,6 +9,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
     let a = (path.len() as i32 - reversed_path.find(".").unwrap_or(0) as i32) as usize;
     let content_type = match &path[a..] {
         "js" => "application/javascript",
+        "json" => "application/json",
         "css" => "text/css",
         "ico" => "image/svg",
         "png" => "image/svg",
@@ -87,6 +88,11 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
             ),
             "image/svg" => format!(
                 "Create a svg file with content that matches the following URL path:
+`/{}`",
+                path
+            ),
+            "application/json" => format!(
+                "Create a json file with content that matches the following URL path:
 `/{}`",
                 path
             ),
