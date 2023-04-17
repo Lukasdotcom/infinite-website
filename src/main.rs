@@ -155,7 +155,7 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
                         format!(
                             "Create a HTML response document with content that matches the following URL path:
 `/{}`
-Add href links on the same site with related topics and link css files with descriptive file names based on the HTML file's topic to improve the styling.",
+Add href links on the same site with related topics.",
                             path)
                     },
                     parent_id: Value::Null,
