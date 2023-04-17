@@ -327,7 +327,7 @@ pub async fn main() -> std::io::Result<()> {
         .unwrap();
     let _ = sqlx::query(
         "CREATE TABLE IF NOT EXISTS cache (
-            path PRIMARY KEY TEXT NOT NULL,
+            path TEXT PRIMARY KEY NOT NULL,
             content TEXT NOT NULL
         )",
     )
