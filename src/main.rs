@@ -309,7 +309,7 @@ _paq.push(['enableLinkTracking']);
     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
 }})();
 </script>
-<link rel=\"stylesheet\" type=\"text/css\" href=\"{}\" />", path)
+<link rel=\"stylesheet\" type=\"text/css\" href=\"/{}.css\" />", path)
         } else {
             res.to_string()
         };
