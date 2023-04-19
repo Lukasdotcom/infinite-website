@@ -23,7 +23,11 @@ async fn website(path: web::Path<String>, req: HttpRequest) -> impl Responder {
         "xml" => "application/xml",
         _ => "text/html",
     };
-    let css = path.to_string() + ".css";
+    let css = if req.query_string().is_empty() {
+        path.to_string() + ".css"
+    } else {
+        path.to_string() + ".css?" + req.query_string()
+    };
     let path = if req.query_string().is_empty() {
         path.to_string()
     } else {
