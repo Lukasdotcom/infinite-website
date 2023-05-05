@@ -221,7 +221,7 @@ Add href links on the same site with related topics.",
                 let client = reqwest::Client::new();
                 let res = client.post("https://open-assistant.io/api/chat/assistant_message")
                     .headers(headers)
-                    .body(format!("{{\"chat_id\":\"{}\",\"parent_id\":\"{}\",\"model_config_name\":\"OA_SFT_Llama_30B_6\",\"sampling_parameters\":{{\"top_k\":50,\"top_p\":0.95,\"typical_p\":null,\"temperature\":0.9,\"repetition_penalty\":1.2,\"max_new_tokens\":1024}}}}", chat_id, parent_id))
+                    .body(format!("{{\"chat_id\":\"{}\",\"parent_id\":\"{}\",\"model_config_name\":\"OA_SFT_Llama_30B_7e3\",\"sampling_parameters\":{{\"top_k\":50,\"top_p\":0.95,\"typical_p\":null,\"temperature\":0.75,\"repetition_penalty\":1.2,\"max_new_tokens\":1024}}}}", chat_id, parent_id))
                     .send()
                     .await
                     .unwrap()
