@@ -17,5 +17,5 @@ sqlx = { version = "0.6.2", features = [
 	"runtime-actix-native-tls",
 	"sqlite",
 ] }
-urlencoding = "2.1.2"
+urlencoding = "2.1.3"
 
