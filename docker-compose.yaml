@@ -1,0 +1,28 @@
+version: "2.1"
+services:
+    infinite-website:
+      image: lukasdotcom/infinite-website:latest
+      container_name: infinite
+
+      environment:
+        - OLLAMA_HOST=http://ollama # The url of an ollama instance
+        - OLLAMA_PORT=11434
+        - MODEL=llama3:latest
+      ports:
+        - 8080:8080
+      restart: always
+      volumes:
+        - infinite-website:/cache
+      depends_on:
+        - ollama
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: always
+    volumes:
+      - ollama:/root/.ollama
+volumes:
+    infinite-website:
+      external: true
+  ollama:
+    external: true
