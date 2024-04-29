@@ -127,7 +127,13 @@ _paq.push(['enableLinkTracking']);
                         CacheDirective::MaxAge(604800),
                     ]))
                     .content_type(content_type)
-                    .body(cache.content + &extra)
+                    .body(
+                        if content_type == "text/html" {
+                            cache.content
+                        } else {
+                            "".to_string()
+                        } + &extra,
+                    )
             }
             Err(_) => {
                 println!("Creating document for: `{}`", path);
@@ -217,7 +223,9 @@ Add href links on the same site with related topics.",
                                 stage += 1;
                             }
                             if stage == 7 {
-                                response.put(extra.as_bytes());
+                                if content_type == "text/html" {
+                                    response.put(extra.as_bytes());
+                                }
                                 break;
                             }
                             if stage == 4 {
