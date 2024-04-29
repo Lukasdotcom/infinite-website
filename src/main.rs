@@ -226,7 +226,6 @@ Add href links on the same site with related topics.",
                             }
                         }
                     }
-                    response.put(extra.as_bytes());
                     Some(Ok::<_, actix_web::Error>(Bytes::from(response)))
                 });
                 HttpResponse::Ok()
