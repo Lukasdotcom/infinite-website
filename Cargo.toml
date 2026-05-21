@@ -14,7 +14,7 @@ broadcaster = "1.0.0"
 lazy_static = "1.4.0"
 ollama-rs = { version = "0.1.9", features = ["stream"]}
 reqwest = "0.12.4"
-sqlx = { version = "0.7.4", features = [
+sqlx = { version = "0.9.0", features = [
 	"sqlite",
 ] }
 tokio = "1.37.0"
